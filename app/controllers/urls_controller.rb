@@ -10,6 +10,7 @@ class UrlsController < ApplicationController
   # GET /urls/1
   # GET /urls/1.json
   def show
+    redirect_to @url.original
   end
 
   # GET /urls/new
@@ -19,24 +20,6 @@ class UrlsController < ApplicationController
 
   # GET /urls/1/edit
   def edit
-  end
-
-  def forward
-    begin
-      url = Url.find(params[:id])
-    rescue ActiveRecord::RecordNotFound
-    #   redirect_to '/urls'
-    url = nil
-    end
-
-    unless url.nil?
-      @address = set_url.address
-      redirect_to @address
-    
-    else 
-       redirect_to '/urls'
-    end
-
   end
 
   # POST /urls
@@ -82,12 +65,11 @@ class UrlsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_url
-      @url = Url.find(params[:id])
+      @url = Url.friendly.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def url_params
-      params.require(:url).permit(:address)
+      params.require(:url).permit(:original)
     end
-
 end
